@@ -394,3 +394,121 @@ const listItems = people.map((person) => (
 #### Why does React need keys? 
 
 `key`는 형제 항목 간에 고유하게 항목을 식별할 수 있게 해줍니다. 잘 선택된 키는 배열 내의 위치보다 더 많은 정보를 제공합니다. 순서가 바뀌더라도, 키를 통해 React는 해당 항목을 전체 생애 동안 식별할 수 있습니다
+
+## React rendering
+
+UI를 요청하고 제공하는 이 과정은 세 가지 단계로 나뉩니다.
+
+### Step 1: Trigger a render 
+
+There are two reasons for a component to render:
+
+1. 초기 렌더링.
+2. The component’s (or one of its ancestors’) **state has been updated.**
+
+<span style="font-weight:bold; color:#AFBF75">NOTE</span>
+
+**Trigger?** 특정 조건이 충족되었을 때 어떤 행동이나 기능이 실행되도록 하는 것
+
+#### Initial render
+
+앱이 시작될 때, 초기 렌더링을 트리거해야 합니다. 프레임워크와 샌드박스에서는 이 코드를 숨기는 경우가 있지만, 이는 target DOM 노드와 함께 **createRoot를 호출**하고, 그 다음에 당신의 컴포넌트를 사용하여 render 메서드를 호출함으로써 이루어집니."
+
+```js
+import { createRoot } from "react-dom/client";
+
+function Image() {
+    return (
+        <img
+            src="https://i.imgur.com/ZF6s192.jpg"
+            alt="'Floralis Genérica' by Eduardo Catalano: a gigantic metallic flower sculpture with reflective petals"
+        />
+    );
+}
+
+const root = createRoot(document.getElementById("root"));
+root.render(<Image />);
+```
+
+#### Re-renders when state updates 
+
+컴포넌트가 처음 렌더링된 후에는, state를 set 함수로 업데이트함으로써 추가 렌더링을 트리거할 수 있습니다. 컴포넌트의 상태를 업데이트하면 자동으로 렌더링이 대기열에 추가됩니다. (이것을 레스토랑 손님이 처음 주문한 후 갈증이나 배고픔에 따라 차, 디저트 및 다양한 것을 주문하는 것으로 상상할 수 있습니다.)
+
+### Step 2: React renders your components
+
+"렌더링을 트리거한 후, React는 어떤 내용을 화면에 표시할지 결정하기 위해 컴포넌트를 호출합니다. **'렌더링'은 React가 여러분의 컴포넌트를 호출하는 것을 의미합니다.**
+
+초기 렌더링에서는 React가 루트 컴포넌트를 호출합니다. 이후 렌더링에서는 상태 업데이트로 렌더링을 트리거한 함수 컴포넌트를 호출합니다. 이 과정은 재귀적입니다. 업데이트된 컴포넌트가 다른 컴포넌트를 반환하면, React는 다음에 그 컴포넌트를 렌더링하고, 만약 그 컴포넌트도 또 다른 것을 반환하면 계속해서 렌더링을 진행합니다. 이 과정은 더 이상 중첩된 컴포넌트가 없을 때까지 계속되며, React는 화면에 무엇을 표시해야 하는지 정확히 알게 됩니다.
+
+```js
+import { createRoot } from "react-dom/client";
+
+function Image() {
+    return (
+        <img
+            src="https://i.imgur.com/ZF6s192.jpg"
+            alt="'Floralis Genérica' by Eduardo Catalano: a gigantic metallic flower sculpture with reflective petals"
+        />
+    );
+}
+
+function Gallery() {
+    return (
+        <section>
+            <h1>Inspiring Sculptures</h1>
+            <Image />
+            <Image />
+            <Image />
+        </section>
+    );
+}
+
+const root = createRoot(document.getElementById("root"));
+root.render(<Gallery />);
+```
+
+-   **During the initial render,** React는 `<section>`, `<h1>`, 그리고 세 개의 `<img>` 태그에 대한 DOM 노드를 생성합니다.
+-   **During a re-render,** React는 이전 렌더링 이후에 어떤 속성이 변경되었는지를 계산합니다. 그러나 그 정보로는 아무런 작업도 하지 않고, 다음 단계인 커밋 단계까지 기다립니다."
+
+<span style="color:#F29544">**CAUTIONS**</span>
+
+**Rendering must always be a pure calculation:**
+
+-   **Same inputs, same output.** Given the same inputs, a component should always return the same JSX. (When someone orders a salad with tomatoes, they should not receive a salad with onions!)
+-   **It minds its own business.** It should not change any objects or variables that existed before rendering. (One order should not change anyone else’s order.) **독립성**
+
+<span style="font-weight:bold; color:rgb(70, 142, 242)">DEEP DIVE</span>
+
+**Optimizing performance**
+
+업데이트된 컴포넌트 내에 중첩된 모든 컴포넌트를 렌더링하는 기본 동작은, 업데이트된 컴포넌트가 트리에서 매우 높은 위치에 있을 경우 성능에 최적이 아닙니다. 성능 문제가 발생하면, 성능 섹션에서 설명된 여러 선택적 방법으로 해결할 수 있습니다. **너무 일찍 최적화하지 마세요!**
+
+### Step 3: React commits changes to the DOM
+
+React는 DOM에 변경 사항을 적용한다.
+
+초기 렌더링에서는 React가 appendChild() DOM API를 사용하여 생성한 모든 DOM 노드를 화면에 추가합니다. re-render에서는 React가 렌더링 중에 계산된 최소한의 필요한 작업을 적용하여 DOM이 최신 렌더링 결과와 일치하도록 만듭니다. React는 render 간에 차이가 있을 때만 DOM 노드를 변경합니다.
+
+예를 들어, 여기 부모로부터 매초 다른 props를 받아 re-renders되는 컴포넌트가 있습니다. `<input>`에 텍스트를 입력하여 값을 업데이트할 수 있지만, 컴포넌트가 재렌더링될 때 텍스트가 사라지지 않는다는 점에 주목하세요."
+
+```js
+export default function Clock({ time }) {
+    return (
+        <>
+            <h1>{time}</h1>
+            <input />
+        </>
+    );
+}
+```
+
+This works because during this last step, React only updates the content of `<h1>` with the new time.
+
+React는 `<input>`이 지난번과 같은 위치에 JSX에 나타나는 것을 확인하므로, so React doesn’t touch the `<input>`—or its value!
+
+After rendering is done and React updated the DOM, the browser will repaint the screen. Although this process is known as “browser rendering”.
+
+#### MEMO 🤔
+
+-   state로 rerendering이 이뤄지면, 업데이트된 컴포넌트가 다른 컴포넌트를 반환하고 있는 상황이면 중첩된 컴포넌트가 없을 때까지 하위 컴포넌트를 계속 렌더링 시킨다.
+-   React는 Trigger a render로 target DOM 노드 렌더링하고 -> 컴포넌트들 렌더링 -> 변경 사항이 있으면 DOM에 적용한다.
