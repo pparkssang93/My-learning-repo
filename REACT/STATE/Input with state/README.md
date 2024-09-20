@@ -231,7 +231,7 @@ You can trigger state updates in response to two kinds of inputs:
 
 이 흐름을 시각화하는 데 도움이 되도록, 각 상태를 레이블이 있는 원으로 그려보고 두 상태 간의 변화를 화살표로 표시해 보세요. 이렇게 여러 흐름을 스케치하면 구현하기 전에도 많은 버그를 정리할 수 있습니다.
 
-![이미지](/IMG/REACT/STATE/input-with-state_01.png)
+![이미지](/Img/React/State/input-with-state_01.png)
 
 <br/>
 <br/>

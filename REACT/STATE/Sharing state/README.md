@@ -56,7 +56,7 @@ export default function Accordion() {
 
 한 패널의 버튼을 누르는 것이 다른 패널에 영향을 주지 않는다는 점에 주목하세요. 이들은 독립적입니다.
 
-![이미지](/IMG/REACT/STATE/sharing-state_01.png)
+![이미지](/Img/React/State/sharing-state_01.png)
 
 하지만 이제 한 번에 하나의 패널만 확장되도록 변경하고 싶다고 가정해 보겠습니다. 그런 디자인에서는 두 번째 패널을 확장하면 첫 번째 패널이 접혀야 합니다. 이를 어떻게 할 수 있을까요?
 
@@ -200,7 +200,7 @@ function Panel({ title, children, isActive, onShow }) {
 
 이로써 상태를 끌어올리는 작업이 완료되었습니다! 공통 부모 컴포넌트로 상태를 이동함으로써 두 패널을 조정할 수 있게 되었습니다. 두 개의 "is shown" 플래그 대신 activeIndex를 사용함으로써 한 번에 하나의 패널만 활성화되도록 보장했습니다. 또한, **이벤트 핸들러를 자식에게 전달함으로써 자식이 부모의 상태를 변경할 수 있게 되었습니다.**
 
-![이미지](/IMG/REACT/STATE/sharing-state_02.png)
+![이미지](/Img/React/State/sharing-state_02.png)
 
 <br/>
 <br/>

@@ -48,7 +48,7 @@ function Counter() {
 
 Here’s how these look as a tree:
 
-![이미지](/IMG/REACT/STATE/preserving-resetting-state_01.png)
+![이미지](/Img/React/State/preserving-resetting-state_01.png)
 
 These are two separate counters because each is rendered at its own position in the tree. React를 사용할 때 이러한 위치를 항상 고려할 필요는 없지만, 작동 방식을 이해하는 데 유용할 수 있습니다. React에서는 화면의 각 컴포넌트가 완전히 isolated state를 가집니다. 예를 들어, 두 개의 `Counter` 컴포넌트를 나란히 렌더링하면 각 컴포넌트는 독립적인 점수와 hover state를 갖게 됩니다.
 
@@ -189,7 +189,7 @@ function Counter({ isFancy }) {
 
 체크박스를 체크하거나 해제할 때, 카운터 state는 초기화되지 않습니다. `isFancy`가 `true`이든 `false`이든, 항상 루트 App 컴포넌트에서 반환된 `div`의 첫 번째 자식으로 `<Counter />`가 존재합니다.
 
-![이미지](/IMG/REACT/STATE/preserving-resetting-state_02.png)
+![이미지](/Img/React/State/preserving-resetting-state_02.png)
 
 같은 위치에 있는 동일한 컴포넌트이므로, React의 입장에서는 같은 카운터로 간주됩니다.
 
@@ -370,9 +370,9 @@ function Counter({ isFancy }) {
 
 체크박스를 클릭하면 카운터 state가 초기화됩니다. 비록 `Counter`를 렌더링하더라도, `<div>`의 첫 번째 자식이 `<div>`에서 `<section>`으로 변경됩니다. 자식 `<div>`가 DOM에서 제거되면서, 그 아래의 전체 트리(카운터와 그 상태를 포함하여)도 함께 파괴됩니다.
 
-![이미지](/IMG/REACT/STATE/preserving-resetting-state_03.png)
+![이미지](/Img/React/State/preserving-resetting-state_03.png)
 
-![이미지](/IMG/REACT/STATE/preserving-resetting-state_04.png)
+![이미지](/Img/React/State/preserving-resetting-state_04.png)
 
 일반적인 규칙으로, **리렌더링 간에 state를 유지하고 싶다면 트리의 구조가 서로 일치**해야 합니다. 구조가 다르면 state가 파괴되는데, 이는 React가 트리에서 컴포넌트를 제거할 때 상태를 삭제하기 때문입니다.
 
