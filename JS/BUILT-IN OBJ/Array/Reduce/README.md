@@ -40,7 +40,7 @@ reduce(callbackFn, initialValue);
 <br/>
 <br/>
 
-### Params
+### Return
 
 누적 계산의 결과 값.
 
